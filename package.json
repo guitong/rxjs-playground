@@ -1,0 +1,14 @@
+{
+  "name": "rxjs-playground",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/guitong/rxjs-playground.git",
+  "author": "Guitong Geng <guitong.geng@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^0.56.4"
+  },
+  "dependencies": {
+    "rxjs": "^5.5.6"
+  }
+}
