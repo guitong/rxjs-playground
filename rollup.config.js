@@ -1,7 +1,11 @@
+import resolve from 'rollup-plugin-node-resolve';
+
 export default {
   input: 'src/main.js',
   output: {
-    file: 'bundle.js',
-    format: 'cjs'
-  }
+    file: 'dist/bundle.js',
+    name: 'MyBundle',
+    format: 'iief'
+  },
+  plugins: [ resolve() ]
 };
