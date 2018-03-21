@@ -39,33 +39,92 @@ document.body.appendChild(button);
 //   subscriptionConnect.unsubscribe();
 // }, 2000);
 
-var source = Rx.Observable.interval(500);
-var subject = new Rx.Subject();
-var refCounted = source.multicast(subject).refCount();
-var subscription1, subscription2, subscriptionConnect;
+// var source = Rx.Observable.interval(500);
+// var subject = new Rx.Subject();
+// var refCounted = source.multicast(subject).refCount();
+// var subscription1, subscription2, subscriptionConnect;
 
-console.log('observerA subscribed');
-subscription1 = refCounted.subscribe({
+// console.log('observerA subscribed');
+// subscription1 = refCounted.subscribe({
+//   next: (v) => console.log('observerA: ' + v),
+// });
+
+// setTimeout(() => {
+//   console.log('observerB subscribed');
+//   subscription2 = refCounted.subscribe({
+//     next: (v) => console.log('observerB: ' + v),
+//   }) 
+// }, 600);
+
+// setTimeout(() => {
+//   console.log('observerA unsubscribed');
+//   subscription1.unsubscribe();
+// }, 1200);
+
+// setTimeout(() => {
+//   console.log('observerB unsubscribed');
+//   subscription2.unsubscribe();
+// }, 2000);
+
+/**
+ * @Subject => BehaviorSubject
+ */
+// var subject = new Rx.BehaviorSubject(0);
+
+// subject.subscribe({
+//   next: (v) => console.log('observerA: ' + v)
+// });
+
+// subject.next(1);
+// subject.next(2);
+
+// subject.subscribe({
+//   next: (v) => console.log('ovserverB: ' + v)
+// });
+
+// subject.next(3);
+
+/**
+ * @Subject => ReplaySubject
+ */
+// var subject = new Rx.ReplaySubject(3);
+
+// subject.subscribe({
+//   next: (v) => console.log('observerA: ' + v)
+// });
+
+// subject.next(1);
+// subject.next(2);
+// subject.next(3);
+// subject.next(4);
+
+// subject.subscribe({
+//   next: (v) => console.log('observerB: ' + v)
+// });
+
+// subject.next(5);
+
+/**
+ * @Subject => AsyncSubject
+ */
+var subject = new Rx.AsyncSubject();
+
+subject.subscribe({
   next: function next(v) {
-    return console.log('observerA: ' + v);
+    return console.log('ovserverA: ' + v);
   }
 });
 
-setTimeout(function () {
-  console.log('observerB subscribed');
-  subscription2 = refCounted.subscribe({
-    next: function next(v) {
-      return console.log('observerB: ' + v);
-    }
-  });
-}, 600);
+subject.next(1);
+subject.next(2);
+subject.next(3);
+subject.next(4);
 
-setTimeout(function () {
-  console.log('observerA unsubscribed');
-  subscription1.unsubscribe();
-}, 1200);
+subject.subscribe({
+  next: function next(v) {
+    return console.log('observerB: ' + v);
+  }
+});
 
-setTimeout(function () {
-  console.log('observerB unsubscribed');
-  subscription2.unsubscribe();
-}, 2000);
+subject.next(5);
+subject.complete();
