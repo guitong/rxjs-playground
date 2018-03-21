@@ -9,20 +9,55 @@ Rx.Observable.fromEvent(button, 'click')
 
 document.body.appendChild(button);
 
-var observable = Rx.Observable.create(function (observer) {
-  observer.next(1);
-  observer.next(2);
-  observer.next(3);
-  setTimeout(() => {
-    observer.next(4);
-    observer.complete();
-  }, 1000);
+// var source = Rx.Observable.interval(500);
+// var subject = new Rx.Subject();
+// var multicasted = source.multicast(subject);
+// var subscription1, subscription2, subscriptionConnect;
+
+// subscription1 = multicasted.subscribe({
+//   next: (v) => console.log('observerA: ' + v),
+// });
+
+// subscriptionConnect = multicasted.connect();
+
+// setTimeout(() => {
+//   subscription2 = multicasted.subscribe({
+//     next: (v) => console.log('observerB: ', v),
+//   });
+// }, 600);
+
+// setTimeout(() => {
+//   subscription1.unsubscribe();
+// }, 1200);
+
+// setTimeout(() => {
+//   subscription2.unsubscribe();
+//   subscriptionConnect.unsubscribe();
+// }, 2000);
+
+var source = Rx.Observable.interval(500);
+var subject = new Rx.Subject();
+var refCounted = source.multicast(subject).refCount();
+var subscription1, subscription2, subscriptionConnect;
+
+console.log('observerA subscribed');
+subscription1 = refCounted.subscribe({
+  next: (v) => console.log('observerA: ' + v),
 });
 
-console.log('just before subscribe');
-observable.subscribe({
-  next: x => console.log('got value ' + x),
-  error: err => console.error('error: ' + err),
-  complete: () => console.log('done'),
-});
-console.log('just after subscribe');
+setTimeout(() => {
+  console.log('observerB subscribed');
+  subscription2 = refCounted.subscribe({
+    next: (v) => console.log('observerB: ' + v),
+  })
+}, 600);
+
+setTimeout(() => {
+  console.log('observerA unsubscribed');
+  subscription1.unsubscribe();
+}, 1200);
+
+setTimeout(() => {
+  console.log('observerB unsubscribed');
+  subscription2.unsubscribe();
+}, 2000);
