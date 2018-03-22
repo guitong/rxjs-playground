@@ -120,3 +120,54 @@ document.body.appendChild(button);
 
 // subject.next(5);
 // subject.complete();
+
+/**
+ * Operators : multiplyByTen
+ */
+// Rx.Observable.prototype.multiplyByTen = function multiplyByTen() {
+//   var input = this;
+//   return Rx.Observable.create(function subscribe(observer) {
+//     input.subscribe({
+//       next: (v) => observer.next(10 * v),
+//       error: (err) => observer.error(err),
+//       complete: () => observer.complete(),
+//     });
+//   });
+// }
+
+// var observable = Rx.Observable.from([1, 2, 3, 4]).multiplyByTen();
+// observable.subscribe(x => console.log(x));
+
+/**
+ * 静态操作符
+ * 是附加到Observable类上的纯函数，
+ * 通常用来从头开始创建Observable
+ */
+/**
+ * 例如：interval, create, merge 等
+ */
+
+/**
+* Scheduler 调度器
+* 调度器是一种数据结构。
+* 调度器是执行上下文，表示在何时何地执行任务。
+* 调度器有一个虚拟的时钟。
+* 例如： async 调度器
+*/
+var observable = Rx.Observable.create(function (proxyObserver) {
+  proxyObserver.next(1);
+  proxyObserver.next(2);
+  proxyObserver.next(3);
+  proxyObserver.complete();
+})
+.observeOn(Rx.Scheduler.async);
+
+var finalObserver = {
+  next: x => console.log('got value ' + x),
+  error: err => console.error(err),
+  complete: () => console.log('done'),
+};
+
+console.log('just before subscribe');
+observable.subscribe(finalObserver);
+console.log('just after subscribe');
